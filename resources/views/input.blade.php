@@ -1,14 +1,9 @@
 <div>
-   @if(Auth::guard('siswa')->check())
-        Logged in as: {{ Auth::guard('siswa')->user()->nis }}
-    @else
-        Not logged in!
-    @endif
-
     <form action="/create_surat" method="POST">
         @csrf
-        <label for="type">Tipe</label>
-        <select name="type" id="type">
+        <label for="tipe">Tipe</label>
+        <select name="tipe" id="type">
+            <option value="" selected disabled>pilih tipe surat</option>
             <option value="sakit">sakit</option>
             <option value="izin">izin</option>
         </select>

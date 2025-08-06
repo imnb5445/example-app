@@ -15,12 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('tipe');
             $table->longText('alasan');
-            $table->string('nis');
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
-            $table->timestamps();
             $table->boolean('approved')->default(false);
-            $table->foreign('nis')->references('nis')->on('siswas')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained();
+            $table->timestamps();
 
         });
     }

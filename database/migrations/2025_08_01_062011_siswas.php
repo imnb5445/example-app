@@ -15,7 +15,9 @@ return new class extends Migration
             $table->string('nis') -> primary();
             $table->string("nisn") -> unique();
             $table->string('nama');
+            $table->string('kelas');
             $table->string('no_ortu', 20);
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

@@ -3,17 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
-class Siswa extends Authenticatable
+class Siswa extends Model
 {
     use HasFactory;
     
     protected $fillable = [
         'nis',
         'nisn',
+        'nama',
+        'kelas',
         'no_ortu',
+        'user_id'
     ];
 
 }

@@ -2,31 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Auth\Events\Attempting;
+use Illuminate\Auth\Events\Login;
 
 class siswaController extends Controller
 {
     public function siswa_login(Request $request){
         $data = $request -> validate([
-            'nisn' => 'required',
-            'nis' => 'required'
+            'name' => 'required',
+            'password' => 'required'
         ]);
         
-        $siswa = Siswa::where('nis', $data['nis'])->first();
-
-        if ($siswa && $siswa->nisn === $data['nisn']) {
-            Auth::guard('siswa')->login($siswa);
-            // return auth('siswa')->user()->nis;
+        if(Auth::attempt(['name' => $data['name'], 'password' => $data['password']])){
+            $request->session()->regenerate();
             return redirect('/siswa/input');
         } else {
-             return back()->withErrors([
-                'nisn' => 'NISN atau NIS salah.',
-            ]);
+            return redirect('/');
         };
+    }
 
-     
+    public function siswa_register(Request $request){
+        $data = $request -> validate([
+            'name' => 'required',
+            'password' => 'required',
+            'email' => 'required',
+            'nis' => 'required',
+            'nisn' => 'required',
+            'nama_lengkap' => 'required',
+            'kelas' => 'required',
+            'no_ortu' => 'required'
+        ]);
+
+        $credential = [
+            'name' => $data['name'],
+            'password' => $data['password'],
+            'email' => $data['email'],
+            'role' => 'siswa'
+        ];
+        
+        $siswaData = [
+            'nis' => $data['nis'],
+            'nisn' => $data['nisn'],
+            'nama' => $data['nama_lengkap'],
+            'kelas' => $data['kelas'],
+            'no_ortu' => $data['no_ortu']
+        ];
+        
+       $credential['password'] = bcrypt($credential['password']);
+       $user = User::create($credential);
+       $userId = $user->id;
+       $siswaData['user_id'] = $userId;
+       Siswa::create($siswaData);
+       Auth::login($user);
+        return redirect('/siswa/input');
     }
 }

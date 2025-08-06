@@ -9,7 +9,7 @@ class Surat extends Model
      protected $fillable = [
         'tipe',
         'alasan',
-        'nis',
+        'user_id',
         'tanggal_mulai',
         'tanggal_selesai'
     ];

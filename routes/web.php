@@ -9,15 +9,19 @@ use App\Http\Controllers\suratController;
         return view('siswa_login');
     })->name('login');
 
-    Route::post('/siswa_login', [siswaController::class, 'siswa_login']);
-
-    Route::middleware('auth:siswa')->group(function () {
-        Route::get('/siswa/input', function () {
-            return view('input');
-        })->name('siswa.dashboard');
-
-        Route::post('/create_surat', [suratController::class, 'create_surat']);
+    Route::get('/register', function (){
+        return view("siswa_register");
     });
 
+    Route::post('/siswa_login', [siswaController::class, 'siswa_login']);
+
+    Route::post('/siswa_register', [siswaController::class, 'siswa_register']);
+    
+    Route::get('/siswa/input', function () {
+            return view('input');
+    })->name('siswa.dashboard');
+
+    Route::post('/create_surat', [suratController::class, 'create_surat']);
+    
 
 
