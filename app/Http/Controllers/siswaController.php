@@ -19,7 +19,7 @@ class siswaController extends Controller
         
         if(Auth::attempt(['name' => $data['name'], 'password' => $data['password']])){
             $request->session()->regenerate();
-            return redirect('/siswa/input');
+            return redirect('/siswa/dashboard');
         } else {
             return redirect('/');
         };
@@ -58,6 +58,6 @@ class siswaController extends Controller
        $siswaData['user_id'] = $userId;
        Siswa::create($siswaData);
        Auth::login($user);
-        return redirect('/siswa/input');
+        return redirect('/siswa/dashboard');
     }
 }
