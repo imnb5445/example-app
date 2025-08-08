@@ -17,6 +17,7 @@
         <input type="date" name="tanggal_selesai" id="tanggal_selesai" readonly>
         <input type="submit">
     </form>
+    <a href="/siswa/dashboard"></a>
 </div>
 
 <script>

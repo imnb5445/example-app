@@ -11,6 +11,7 @@ class Surat extends Model
         'alasan',
         'user_id',
         'tanggal_mulai',
-        'tanggal_selesai'
+        'tanggal_selesai',
+        'approved'
     ];
 }

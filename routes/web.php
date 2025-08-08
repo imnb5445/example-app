@@ -6,7 +6,7 @@ use App\Http\Controllers\siswaController;
 use App\Http\Controllers\suratController;
 
 
-
+// user siswa
     Route::get('/', function () {
         return view('siswa_login');
     })->name('login');
@@ -44,4 +44,26 @@ use App\Http\Controllers\suratController;
     Route::post('/create_surat', [suratController::class, 'create_surat']);
     
 
+
+//user admin
+    Route::get('/admin/dashboard', function (){
+        $listSurat = [];
+
+         $listSurat =  DB::table('users')
+            ->join('surats', 'users.id', '=', 'surats.user_id')
+            ->join('siswas', 'users.id', '=', 'siswas.user_id')
+            ->select('users.*', 'surats.*', 'siswas.*')
+            ->get();
+
+            return view('admin_dashboard', ['listSurat' => $listSurat]);
+
+        // if(Auth::check() && Auth::user()->role == "admin"){
+           
+        // };
+    });
+
+    
+
+    Route::get('/admin/review_screen/{id}', [suratController::class, 'showReviewScreen']);
+    Route::put('/admin/approved/{id}', [suratController::class, 'approvedSurat']);
 
