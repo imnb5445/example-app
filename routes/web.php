@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\adminController;
 use App\Http\Controllers\siswaController;
 use App\Http\Controllers\suratController;
 
@@ -46,6 +47,18 @@ use App\Http\Controllers\suratController;
 
 
 //user admin
+    Route::get('/admin/login', function(){
+        return view('admin_login');
+    });
+
+    Route::post('/admin_login', [adminController::class, 'admin_login']);
+
+    Route::get('/admin/register', function(){
+        return view('admin_register');
+    });
+
+    Route::post('/admin_register', [adminController::class, 'admin_register']);
+
     Route::get('/admin/dashboard', function (){
         $listSurat = [];
 

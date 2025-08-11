@@ -27,19 +27,25 @@ class siswaController extends Controller
 
     public function siswa_register(Request $request){
         $data = $request -> validate([
-            'name' => 'required',
-            'password' => 'required',
-            'email' => 'required',
-            'nis' => 'required',
-            'nisn' => 'required',
-            'nama_lengkap' => 'required',
-            'kelas' => 'required',
-            'no_ortu' => 'required'
+            'name'          => 'required|string|max:255',
+            'password'      => 'required|string',
+            'email'         => 'required|string|email|max:255|unique:users,email',
+            'nis'           => 'required|string|max:4',
+            'nisn'          => 'required|string|max:10',
+            'nama_lengkap'  => 'required|string|max:255',
+            'kelas'         => 'required|string',
+            'no_ortu'       => 'required|string|max:20'
         ]);
+
+        // Remove all HTML/PHP tags from all string values
+        $data = array_map(function ($value) {
+            return is_string($value) ? strip_tags($value) : $value;
+        }, $data);
+
 
         $credential = [
             'name' => $data['name'],
-            'password' => $data['password'],
+            'password' => bcrypt($data['password']),
             'email' => $data['email'],
             'role' => 'siswa'
         ];
@@ -52,12 +58,22 @@ class siswaController extends Controller
             'no_ortu' => $data['no_ortu']
         ];
         
-       $credential['password'] = bcrypt($credential['password']);
-       $user = User::create($credential);
-       $userId = $user->id;
-       $siswaData['user_id'] = $userId;
-       Siswa::create($siswaData);
-       Auth::login($user);
+        $user = User::create($credential);
+        $userId = $user->id;
+        $siswaData['user_id'] = $userId;
+        Siswa::create($siswaData);
+
+        Auth::login($user);
         return redirect('/siswa/dashboard');
+    }
+
+    public function siswa_logout(Request $request){
+        Auth::logout(); // remove user session
+
+        // Optional: invalidate the session and regenerate CSRF token
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/admin/login'); // redirect to login or homepage
     }
 }
