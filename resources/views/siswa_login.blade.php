@@ -1,7 +1,4 @@
 <div>
-    @auth
-        <p>you are login</p>
-    @endauth
     <form action="/siswa_login" method="POST">
         @csrf
         <label for="name">Name</label>

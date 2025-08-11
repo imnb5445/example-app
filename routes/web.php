@@ -8,22 +8,9 @@ use App\Http\Controllers\suratController;
 
 
 // user siswa
-    Route::get('/', function () {
-        return view('siswa_login');
-    })->name('login');
-
-    Route::get('/register', function (){
-        return view("siswa_register");
-    });
-
-    Route::post('/siswa_login', [siswaController::class, 'siswa_login']);
-
-    Route::post('/siswa_register', [siswaController::class, 'siswa_register']);
-
-    Route::post('/siswa_logout', [siswaController::class, 'siswa_logout']);
-    
+Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::get('/siswa/input', function () {
-            return view('input');
+        return view('input');
     });
 
     Route::get('siswa/dashboard', function (){
@@ -46,10 +33,52 @@ use App\Http\Controllers\suratController;
 
     Route::post('/create_surat', [suratController::class, 'create_surat']);
     
+});
+    Route::get('/', function () {
+        if (Auth::check()) {
+            return redirect()->back();
+        }
+        return view('siswa_login');
+    })->name('login');
+
+    Route::get('/register', function (){
+        return view("siswa_register");
+    });
+
+    Route::post('/siswa_login', [siswaController::class, 'siswa_login']);
+
+    Route::post('/siswa_register', [siswaController::class, 'siswa_register']);
+
+    Route::post('/siswa_logout', [siswaController::class, 'siswa_logout']);
+    
+    
+    
 
 
 //user admin
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', function (){
+        $listSurat = [];
+
+        $listSurat =  DB::table('users')
+            ->join('surats', 'users.id', '=', 'surats.user_id')
+            ->join('siswas', 'users.id', '=', 'siswas.user_id')
+            ->select('users.*', 'surats.*', 'siswas.*')
+            ->get();
+
+        return view('admin_dashboard', ['listSurat' => $listSurat]);
+    });
+
+    
+
+    Route::get('/admin/review_screen/{id}', [suratController::class, 'showReviewScreen']);
+    Route::put('/admin/approved/{id}', [suratController::class, 'approvedSurat']);
+
+});
     Route::get('/admin/login', function(){
+        if (Auth::check()) {
+            return redirect()->back();
+        }
         return view('admin_login');
     });
 
@@ -63,24 +92,4 @@ use App\Http\Controllers\suratController;
 
     Route::post('/admin_register', [adminController::class, 'admin_register']);
 
-    Route::get('/admin/dashboard', function (){
-        $listSurat = [];
-
-         $listSurat =  DB::table('users')
-            ->join('surats', 'users.id', '=', 'surats.user_id')
-            ->join('siswas', 'users.id', '=', 'siswas.user_id')
-            ->select('users.*', 'surats.*', 'siswas.*')
-            ->get();
-
-            return view('admin_dashboard', ['listSurat' => $listSurat]);
-
-        // if(Auth::check() && Auth::user()->role == "admin"){
-           
-        // };
-    });
-
-    
-
-    Route::get('/admin/review_screen/{id}', [suratController::class, 'showReviewScreen']);
-    Route::put('/admin/approved/{id}', [suratController::class, 'approvedSurat']);
-
+   

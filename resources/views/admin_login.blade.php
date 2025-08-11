@@ -1,5 +1,4 @@
 <div>
-   <div>
     <form action="/admin_login" method="POST">
         @csrf
         <label for="name">Name</label>
@@ -8,5 +7,4 @@
         <input name="password" type="text">
         <input type="submit">
     </form>
-</div>
 </div>
