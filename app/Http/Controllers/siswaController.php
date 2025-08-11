@@ -74,6 +74,6 @@ class siswaController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/admin/login'); // redirect to login or homepage
+        return redirect('/'); // redirect to login or homepage
     }
 }

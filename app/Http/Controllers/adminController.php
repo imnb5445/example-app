@@ -14,7 +14,7 @@ class adminController extends Controller
             'password' => 'required'
         ]);
         
-        if(Auth::attempt(['name' => $data['name'], 'password' => $data['password']])){
+        if(Auth::attempt(['name' => $data['name'], 'password' => $data['password'], 'role' =>'admin'])){
             $request->session()->regenerate();
             return redirect('/admin/dashboard');
         } else {

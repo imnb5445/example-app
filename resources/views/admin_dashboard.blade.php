@@ -1,6 +1,5 @@
 <div>
     @foreach ($listSurat as $surat)
-   
    <div>
         <p>{{ $surat->nama}}</p>
         <p>{{ $surat->tipe}}</p>
@@ -12,7 +11,9 @@
 
         </p>
    </div>
-
-       
    @endforeach
+   <form action="/admin_logout" method="POST">
+    @csrf
+    <button type="submit">Logout</button>
+</form>
 </div>

@@ -19,6 +19,8 @@ use App\Http\Controllers\suratController;
     Route::post('/siswa_login', [siswaController::class, 'siswa_login']);
 
     Route::post('/siswa_register', [siswaController::class, 'siswa_register']);
+
+    Route::post('/siswa_logout', [siswaController::class, 'siswa_logout']);
     
     Route::get('/siswa/input', function () {
             return view('input');
@@ -51,11 +53,13 @@ use App\Http\Controllers\suratController;
         return view('admin_login');
     });
 
-    Route::post('/admin_login', [adminController::class, 'admin_login']);
-
     Route::get('/admin/register', function(){
         return view('admin_register');
     });
+
+    Route::post('/admin_login', [adminController::class, 'admin_login']);
+
+    Route::post('/admin_logout', [adminController::class, 'admin_logout']);
 
     Route::post('/admin_register', [adminController::class, 'admin_register']);
 
