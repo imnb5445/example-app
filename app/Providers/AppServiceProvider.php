@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Surat;
+use App\Policies\SuratPolicy;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,4 +23,8 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+
+    protected $policies = [
+        Surat::class => SuratPolicy::class,
+    ];
 }

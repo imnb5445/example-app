@@ -32,6 +32,10 @@ class suratController extends Controller
     }
 
     public function showReviewScreen($id){
+        if (!Auth::check()) {
+             return redirect()->back()->with('error', 'You are not allowed to view this post.');
+        }
+       
         $surat = DB::table('users')
             ->join('surats', 'users.id', '=', 'surats.user_id')
             ->join('siswas', 'users.id', '=', 'siswas.user_id')
@@ -39,6 +43,15 @@ class suratController extends Controller
             ->where('surats.id', '=', $id)
             ->first();
 
+        if (!$surat) {
+            return redirect()->back()->with('error', 'Post not found.');
+        }
+
+        $suratModel = \App\Models\Surat::find($id);
+
+        if (Auth::user()->cannot('view', $suratModel)) {
+            return redirect()->back()->with('error', 'You are not allowed to view this post.');
+        }
         return view('admin_review', ['surat' => $surat]);
     }
 }
