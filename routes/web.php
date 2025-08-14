@@ -93,3 +93,5 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin_register', [adminController::class, 'admin_register']);
 
    
+    Route::get('/surat_ttd/{id}', [suratController::class, 'showTtdScreen']);
+    Route::put('/surat_ttd/{id}', [suratController::class, 'storeTtd']);

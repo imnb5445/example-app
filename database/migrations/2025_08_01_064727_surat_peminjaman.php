@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
             $table->boolean('approved')->default(false);
+            $table->string('ttd')->nullable();
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
 
@@ -29,6 +30,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('surat_peminjaman');
+        Schema::disableForeignKeyConstraints();
+        Schema::dropIfExists('surats');
     }
 };
