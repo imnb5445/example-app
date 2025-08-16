@@ -4,23 +4,27 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Surat;
+use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 
 class suratController extends Controller
 {
+    use AuthorizesRequests;
+
     public function create_surat(Request $request){
         $data = $request -> validate([
-            'tipe' => 'required',
-            'alasan' => 'required',
+            'tipe' => 'required|string',
+            'alasan' => 'required|string|max:255',
             'tanggal_mulai' => 'required',
             'tanggal_selesai' => 'required'
         ]);
 
-        $data['alasan'] = strip_tags($data['alasan']);
         $data['user_id'] = Auth::id();
         Surat::create($data);
 
@@ -34,6 +38,33 @@ class suratController extends Controller
 
         return redirect('/admin/dashboard');
     }
+
+    public function edit_surat(Request $request, Surat $id){
+        $this->authorize('update', $id);
+
+        $data = $request -> validate([
+            'tipe' => 'required',
+            'alasan' => 'required',
+            'tanggal_mulai' => 'required',
+            'tanggal_selesai' => 'required'
+        ]);
+
+
+        $id->update($data);
+
+
+
+        return redirect('/siswa/list');
+    }
+
+    public function delete_surat(Surat $surat){
+        $this->authorize('delete', $surat); // optional: if you use policies
+
+        $surat->delete();
+
+        return redirect('/siswa/list')->with('success', 'Surat deleted successfully');
+    }
+
 
     public function storeTtd(Request $request, Surat $id){
        $request->validate([
@@ -77,6 +108,28 @@ class suratController extends Controller
             return redirect()->back()->with('error', 'You are not allowed to view this post.');
         }
         return view('admin_review', ['surat' => $surat]);
+    }
+
+    public function showEditScreen($id){
+        if (!Auth::check()) {
+             return redirect()->back()->with('error', 'You are not allowed to view this post.');
+        }
+       
+        $surat = DB::table('surats')
+            ->select('*')
+            ->where('id', '=', $id)
+            ->first();
+
+        if (!$surat) {
+            return redirect()->back()->with('error', 'Post not found.');
+        }
+
+        $suratModel = \App\Models\Surat::find($id);
+
+        if (Auth::user()->cannot('view', $suratModel)) {
+            return redirect()->back()->with('error', 'You are not allowed to view this post.');
+        }
+        return view('edit', ['surat' => $surat]);
     }
 
     public function showTtdScreen($id){

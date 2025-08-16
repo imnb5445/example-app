@@ -8,6 +8,12 @@
         <p>{{ $surat->approved ? 'Approved' : 'Not Approved' }}
          <img src="{{ asset('storage/' . $surat->ttd) }}" alt="TTD" style="max-width:200px;">
         </p>
+        <a href="/surat/edit/{{ $surat->id }}">Edit</a>
+        <form action="/surat/delete/{{$surat->id}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this surat?');">
+            @csrf
+            @method('DELETE')
+            <button type="submit">Delete</button>
+         </form>
    </div>
 
        

@@ -32,6 +32,12 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
     });
 
     Route::post('/create_surat', [suratController::class, 'create_surat']);
+
+    Route::get('/surat/edit/{id}', [suratController::class, 'showEditScreen']);
+
+    Route::put('/surat/edit/{id}', [suratController::class, 'edit_surat']);
+
+    Route::delete('/surat/delete/{surat}', [suratController::class, 'delete_surat']);
     
 });
     Route::get('/', function () {
@@ -50,6 +56,7 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::post('/siswa_register', [siswaController::class, 'siswa_register']);
 
     Route::post('/siswa_logout', [siswaController::class, 'siswa_logout']);
+
     
     
     
