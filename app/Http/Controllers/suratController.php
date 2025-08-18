@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Surat;
-use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 
@@ -63,6 +64,19 @@ class suratController extends Controller
         $surat->delete();
 
         return redirect('/siswa/list')->with('success', 'Surat deleted successfully');
+    }
+
+    public function download_surat($id){
+        $surat =  DB::table('users')
+            ->join('surats', 'users.id', '=', 'surats.user_id')
+            ->join('siswas', 'users.id', '=', 'siswas.user_id')
+            ->select('users.*', 'surats.*', 'siswas.*')
+            ->where('surats.id', '=', $id)
+            ->first(); 
+
+        $pdf = Pdf::loadView('surat_pdf', ['surat' => $surat]);
+ 
+        return $pdf->download();
     }
 
 

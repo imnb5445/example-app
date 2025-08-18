@@ -31,6 +31,18 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
         return view('surat_list', ['listSurat' => $listSurat]);
     });
 
+    Route::get('/surat/view', function (){
+        $listSurat = [];
+
+        $listSurat =  DB::table('users')
+            ->join('surats', 'users.id', '=', 'surats.user_id')
+            ->join('siswas', 'users.id', '=', 'siswas.user_id')
+            ->select('users.*', 'surats.*', 'siswas.*')
+            ->get();
+
+        return view('admin_dashboard', ['listSurat' => $listSurat]);
+    });
+
     Route::post('/create_surat', [suratController::class, 'create_surat']);
 
     Route::get('/surat/edit/{id}', [suratController::class, 'showEditScreen']);
@@ -38,6 +50,8 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::put('/surat/edit/{id}', [suratController::class, 'edit_surat']);
 
     Route::delete('/surat/delete/{surat}', [suratController::class, 'delete_surat']);
+
+    Route::post('/surat/download/{id}', [suratController::class, 'download_surat']);
     
 });
     Route::get('/', function () {

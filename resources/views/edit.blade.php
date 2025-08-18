@@ -3,6 +3,7 @@
     $mulai   = $surat->tanggal_mulai ? Carbon::parse($surat->tanggal_mulai) : null;
     $selesai = $surat->tanggal_selesai ? Carbon::parse($surat->tanggal_selesai) : null;
     $prefillDurasi = ($mulai && $selesai) ? $mulai->diffInDays($selesai) : null;
+    $readOnly = $surat->approved ?? false;
 @endphp
 
 <div>
@@ -11,13 +12,13 @@
         @method('PUT')
 
         <label for="tipe">Tipe</label>
-        <select name="tipe" id="type">
+        <select name="tipe" id="type" {{ $readOnly ? 'disabled' : '' }}>
             <option value="sakit" {{ old('tipe', $surat->tipe) === 'sakit' ? 'selected' : '' }}>sakit</option>
             <option value="izin"  {{ old('tipe', $surat->tipe) === 'izin'  ? 'selected' : '' }}>izin</option>
         </select>
 
         <label for="alasan">Alasan</label>
-        <textarea name="alasan" id="alasan" cols="30" rows="10">{{ old('alasan', $surat->alasan) }}</textarea>
+        <textarea name="alasan" id="alasan" cols="30" rows="10" {{ $readOnly ? 'disabled' : '' }}>{{ old('alasan', $surat->alasan) }}</textarea>
 
         {{-- Durasi is for UI only, not saved (no name="durasi") --}}
         <label for="durasi">Durasi (hari)</label>
@@ -27,14 +28,16 @@
             min="1"
             max="30"
             value="{{ old('durasi', $prefillDurasi) }}"
-            placeholder="Jumlah hari" />
+            placeholder="Jumlah hari" 
+             {{ $readOnly ? 'disabled' : '' }}/>
 
         <label for="tanggal_mulai">Tanggal Mulai</label>
         <input
             type="date"
             name="tanggal_mulai"
             id="tanggal_mulai"
-            value="{{ old('tanggal_mulai', $surat->tanggal_mulai) }}" />
+            value="{{ old('tanggal_mulai', $surat->tanggal_mulai) }}" 
+             {{ $readOnly ? 'disabled' : '' }}/>
 
         <label for="tanggal_selesai">Tanggal Selesai</label>
         <input
@@ -42,12 +45,21 @@
             name="tanggal_selesai"
             id="tanggal_selesai"
             value="{{ old('tanggal_selesai', $surat->tanggal_selesai) }}"
-            readonly />
+            readonly 
+             {{ $readOnly ? 'disabled' : '' }}/>
 
         <input name="user_id" type="hidden" value="{{ $surat->user_id }}" />
 
-        <input type="submit" value="Update Surat">
+        @if (!$readOnly)
+            <input type="submit" value="Update Surat">
+        @endif
     </form>
+    @if ($readOnly && !$surat->ttd == null)
+        <form action="/surat/download/{{ $surat->id }}" method="post">
+            @csrf
+             <button type="submit">Download</button>
+            </form>
+    @endif
 
     <a href="/siswa/dashboard">Kembali</a>
 </div>
