@@ -12,7 +12,7 @@
         </p>
    </div>
    @endforeach
-   <form action="/admin_logout" method="POST">
+   <form action="/logout" method="POST">
     @csrf
     <button type="submit">Logout</button>
 </form>

@@ -32,7 +32,7 @@
         if (!isNaN(startDate.getTime()) && duration > 0) {
             // Add duration days to start date
             const endDate = new Date(startDate);
-            endDate.setDate(endDate.getDate() + duration);
+            endDate.setDate(endDate.getDate() + (duration - 1) );
 
             // Format as YYYY-MM-DD for input
             const yyyy = endDate.getFullYear();

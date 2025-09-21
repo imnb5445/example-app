@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\userController;
 use App\Http\Controllers\adminController;
 use App\Http\Controllers\siswaController;
 use App\Http\Controllers\suratController;
@@ -65,16 +66,12 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
         return view("siswa_register");
     });
 
-    Route::post('/siswa_login', [siswaController::class, 'siswa_login']);
 
     Route::post('/siswa_register', [siswaController::class, 'siswa_register']);
 
-    Route::post('/siswa_logout', [siswaController::class, 'siswa_logout']);
+    Route::post('/login', [userController::class, 'login']);
 
-    
-    
-    
-
+    Route::post('/logout', [userController::class, 'logout']);
 
 //user admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -106,10 +103,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/register', function(){
         return view('admin_register');
     });
-
-    Route::post('/admin_login', [adminController::class, 'admin_login']);
-
-    Route::post('/admin_logout', [adminController::class, 'admin_logout']);
 
     Route::post('/admin_register', [adminController::class, 'admin_register']);
 

@@ -11,20 +11,6 @@ use Illuminate\Auth\Events\Login;
 
 class siswaController extends Controller
 {
-    public function siswa_login(Request $request){
-        $data = $request -> validate([
-            'name' => 'required',
-            'password' => 'required'
-        ]);
-        
-        if(Auth::attempt(['name' => $data['name'], 'password' => $data['password']])){
-            $request->session()->regenerate();
-            return redirect('/siswa/dashboard');
-        } else {
-            return redirect('/');
-        };
-    }
-
     public function siswa_register(Request $request){
         $data = $request -> validate([
             'name'          => 'required|string|max:255',
@@ -65,15 +51,5 @@ class siswaController extends Controller
 
         Auth::login($user);
         return redirect('/siswa/dashboard');
-    }
-
-    public function siswa_logout(Request $request){
-        Auth::logout(); // remove user session
-
-        // Optional: invalidate the session and regenerate CSRF token
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/'); // redirect to login or homepage
     }
 }
